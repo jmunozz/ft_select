@@ -43,7 +43,7 @@ void			print(t_meta *meta, t_list *begin)
 	while (tmp && POS_L + COL_PAD[CUR_COL] < L)
 	{
 		tputs(tgoto(tgetstr("cm", NULL), POS_L, POS_H), 1, &fputchar);
-		print_elem(meta, tmp, tmp->content, 1);
+		print_elem(meta, tmp, 1);
 		POS_H++;
 		if (POS_H == H)
 		{

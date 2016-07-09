@@ -110,14 +110,14 @@ void			init_last(t_meta *meta)
 	t_ushort to;
 
 	i = -1;
-	to = 0;
+	to = -SPACING;
 	while (++i < COL_NB)
 	{
 		to += COL_PAD[i] + SPACING;
 		if (to > L)
 		{
 			LAST = i--;
-			to = 0;
+			to = -SPACING;
 		}
 	}
 }

@@ -54,7 +54,7 @@ void				init_pos(t_meta *meta, char *str);
 **print.c
 */
 void				save_pos(t_meta *meta, char mode);
-void				print_elem(t_meta *meta, t_list *elem, char *print, char mode);
+void				print_elem(t_meta *meta, t_list *elem, char mode);
 void				print(t_meta *meta, t_list *begin);
 /*
 ** signal.c
