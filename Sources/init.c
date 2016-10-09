@@ -1,6 +1,8 @@
 #include "../Includes/ft_select.h"
-
-
+/*
+** Selon la chaîne de caractère passée en paramètre "hcl",
+** initialise pos hauteur, largeur et la colonne courante.
+*/
 void			init_pos(t_meta *meta, char *str)
 {
 	if (ft_strchr(str, 'h'))
@@ -11,6 +13,10 @@ void			init_pos(t_meta *meta, char *str)
 		CUR_COL = 0;
 }
 
+/*
+** Initisalise la hauteur et la largeur du terminal, si TERM
+** est défini.
+*/
 int		init_term(t_meta *meta)
 {
 	if (tgetent(NULL, getenv("TERM")) < 0)
@@ -19,7 +25,9 @@ int		init_term(t_meta *meta)
 	meta->l = (t_ushort)tgetnum("co");
 	return (1);
 }
-
+/* Créer un tableau dans la structure meta contenant
+** le padding de chaque colonne.
+*/
 int				init_pad(t_meta *meta)
 {
 	t_list		*tmp;
@@ -33,7 +41,7 @@ int				init_pad(t_meta *meta)
 	COL_PAD[COL_NB] = 0;
 	i = 0;
 	j = -1;
-	tmp =BEGIN;
+	tmp = BEGIN;
 	max = 0;
 	while (tmp)
 	{
@@ -49,8 +57,10 @@ int				init_pad(t_meta *meta)
 	}
 	return (1);
 }
-
-
+/*
+** Initialise la liste à partir des arguments contenus dans av.
+** Initialise data_type à 0.
+*/
 void			init_list(t_meta *meta, char **av)
 {
 	int		i;

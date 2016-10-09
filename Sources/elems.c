@@ -1,6 +1,22 @@
 #include "../Includes/ft_select.h"
+/*
+** Renvoie 1 si la largeur de la fenetre est plus grande que le plus grand
+** padding. O autrement.
+*/
+static t_ushort	select_is_printable(t_meta *meta)
+{
+	int i;
 
-
+	i = -1;
+	while (COL_PAD[++i])
+		if (COL_PAD[i] > L)
+			return (0);
+	return (1);
+}
+/*
+**  le numero de la colonne dans laquelle
+** se trouve l'element.
+*/
 void	set_pos(t_meta *meta, t_list *elem)
 {
 	t_list *tmp;
@@ -18,9 +34,9 @@ void	set_pos(t_meta *meta, t_list *elem)
 	}
 }
 /*
- ** Renvoie un pointeur sur un élément de la liste en fonction de POS_H.
- ** mode 1 = renvoie un pointeur sur le premier élément de la col courante.
- */
+** Renvoie un pointeur sur un élément de la liste en fonction de POS_H, CUR_COL
+** mode 1 = renvoie un pointeur sur le premier élément de la col courante.
+*/
 t_list	*get_elem(t_meta *meta, char mode)
 {
 	t_list		*tmp;
@@ -79,6 +95,8 @@ t_list	*delete_elem(t_meta *meta, t_list *elem)
 ** mode 3 == Supprime l'élément mémorisé. Le remplace par l'élément qui suit
 ** dans la liste ou NULL. Si NULL, remonte d'une case. Ré-actualise l'impression
 ** de l'élément courant.
+** mode 4 == Définie le nouveau CUR_COL et POS_H pour l'élément courant. Imprime
+** en respectant l'ordonnancement des colonnes.
 */
 void	ft_current(t_meta *meta, char mode)
 {
@@ -107,9 +125,16 @@ void	ft_current(t_meta *meta, char mode)
 		set_pos(meta, elem);
 		col = CUR_COL;
 		CUR_COL = getstart(meta, CUR_COL);
-		print(meta, BEGIN, 0);
+		if (select_is_printable(meta))
+			print(meta, get_elem(meta, 1), 0);
+		else
+		{
+			init_screen(meta);
+			dprintf(1, "PLEASE RESIZE\n");
+		}
 		POS_L = get_pos_l(meta, col, CUR_COL);
 		CUR_COL = col;
-		ft_current(meta, 0);
+		if (select_is_printable(meta))
+			ft_current(meta, 0);
 	}
 }

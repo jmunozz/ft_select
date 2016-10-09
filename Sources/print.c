@@ -14,6 +14,7 @@ void			init_screen(t_meta *meta)
 {
 	tputs(tgetstr("cl", NULL), 1, &fputchar);
 	tputs(tgetstr("vi", NULL), 1, &fputchar);
+	tputs(tgoto(tgetstr("cm", NULL), POS_L, POS_H), 1, &fputchar);
 	init_pos(meta, "hl");
 }
 

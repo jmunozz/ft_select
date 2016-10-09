@@ -17,6 +17,8 @@ SRC= Sources/main.c\
 	 Sources/move.c\
 	 Sources/signals.c\
 	 Sources/errors.c\
+	 Sources/init.c\
+	 Sources/elems.c\
 	 Sources/print.c
 LIBS= Libs/
 OBJ= $(SRC:.c=.o)
