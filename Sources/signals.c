@@ -34,8 +34,6 @@ void	handle_sig(int sig)
 	meta = get_meta(NULL);
 	if (sig == SIGINT || sig ==  SIGQUIT || sig == SIGTERM)
 	{
-		handle_term(1);
-		tputs(tgetstr("ve", NULL), 1, &fputchar);
 		exit_select(meta);
 		exit (-1);
 	}
