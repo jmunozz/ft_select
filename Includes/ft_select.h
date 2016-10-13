@@ -58,12 +58,15 @@ t_ushort			get_pos_l(t_meta *meta, t_ushort cur_col, t_ushort col_start);
 /*
 **main.c
 */
+void				debug(t_meta *meta);
+void				exit_select(t_meta *meta);
 void				read_keys(t_meta *meta);
 t_meta				*get_meta(t_meta *meta);
-void				handle_term(char c);
+t_termios			*handle_term(char c);
 /*
 **print.c
 */
+void				print_cont(t_meta *meta, t_list *begin, char mode);
 void				clear_line(t_meta *meta, char mode);
 void				init_screen(t_meta *meta);
 void				save_pos(t_meta *meta, char mode);
@@ -83,6 +86,7 @@ void				ft_errors(void);
 */
 void				init_list(t_meta *meta, char **av);
 void				init_pos(t_meta *meta, char *str);
+void				init_curseur(t_meta *meta, char mode);
 int					init_pad(t_meta *meta);
 int					init_term(t_meta *meta);
 /*

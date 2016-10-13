@@ -1,6 +1,6 @@
 #include "../Includes/ft_select.h"
 
-void	handle_term(char c)
+t_termios	*handle_term(char c)
 {
 	t_termios			term;
 	static t_termios	*save;
@@ -15,13 +15,17 @@ void	handle_term(char c)
 		term.c_lflag &= ~(ECHO);
 		if (tcsetattr(0, TCSADRAIN, &term) == -1)
 			ft_errors();
+		return (NULL);
 	}
 	if (c == 1 && save)
 	{
 		if (tcsetattr(0, TCSADRAIN, save) == -1)
 			ft_errors();
 		free(save);
+		return (NULL);
 	}
+	else
+		return (save);
 }
 
 char	**return_select(t_meta *meta)
@@ -100,8 +104,8 @@ void	print_elems(t_list *elem)
 void			exit_select(t_meta *meta)
 {
 	handle_term(1);
-	tputs(tgetstr("ve", NULL), 1, &fputchar);
 	tputs(tgetstr("cl", NULL), 1, &fputchar);
+	init_curseur(meta, 1);
 }
 
 t_meta			*get_meta(t_meta *meta)
@@ -123,6 +127,7 @@ int				main (int ac, char **av)
 	set_signals();
 	init_list(&meta, av);
 	init_term(&meta);
+	init_curseur(&meta, 0);
 	init_pad(&meta);
 	init_pos(&meta, "hlc");
 	get_meta(&meta);
@@ -137,6 +142,6 @@ int				main (int ac, char **av)
 		ft_putstr(*tab);
 		tab++;
 	}
-	debug(&meta);
+//	debug(&meta);
 	return (0);
 }

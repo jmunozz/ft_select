@@ -13,7 +13,6 @@ int				fputchar(int c)
 void			init_screen(t_meta *meta)
 {
 	tputs(tgetstr("cl", NULL), 1, &fputchar);
-	tputs(tgetstr("vi", NULL), 1, &fputchar);
 	tputs(tgoto(tgetstr("cm", NULL), POS_L, POS_H), 1, &fputchar);
 	init_pos(meta, "hl");
 }
@@ -99,3 +98,33 @@ void			print(t_meta *meta, t_list *begin, char mode)
 	COL_PR = (tmp) ? CUR_COL : 666;
 	save_pos(meta, 1);
 }
+
+void		print_cont(t_meta *meta, t_list *begin, char mode)
+{
+	t_ushort	col_tmp;
+	t_list		*first_elem;
+	t_list		*tmp;
+
+	save_pos(meta, 0);
+	col_tmp = CUR_COL;
+	CUR_COL = getstart(meta, CUR_COL);
+	first_elem = get_elem(meta, 1);
+	init_screen(meta);
+	while (first_elem && POS_L + COL_PAD[CUR_COL] < L)
+	{
+		tputs(tgoto(tgetstr("cm", NULL), POS_L, POS_H), 1, &fputchar);
+		clear_line(meta, mode);
+		print_elem(meta, first_elem, 1);
+		if (++POS_H == H)
+		{
+			POS_H = 0;
+			POS_L += COL_PAD[CUR_COL++] + SPACING;
+		}
+		first_elem = first_elem->next;
+	}
+	clear_line(meta, mode);
+	COL_PR = (tmp) ? CUR_COL : 666;
+	save_pos(meta, 1);
+	CUR_COL = col_tmp;
+}
+

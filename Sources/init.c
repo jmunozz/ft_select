@@ -12,7 +12,23 @@ void			init_pos(t_meta *meta, char *str)
 	if (ft_strchr(str, 'c'))
 		CUR_COL = 0;
 }
-
+/*
+** Gere le curseur
+*/
+void		init_curseur(t_meta *meta, char mode)
+{
+	(void)meta;
+	if (!mode)
+	{
+		tputs(tgetstr("vi", NULL), 1, &fputchar);
+		tputs(tgetstr("ti", NULL), 1, &fputchar);
+	}
+	else
+	{
+		tputs(tgetstr("ve", NULL), 1, &fputchar);
+		tputs(tgetstr("te", NULL), 1, &fputchar);
+	}
+}
 /*
 ** Initisalise la hauteur et la largeur du terminal, si TERM
 ** est défini.
