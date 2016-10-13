@@ -1,5 +1,9 @@
 #include "../Includes/ft_select.h"
-
+/*
+** Fonction de gestion du terminal. mode 0 = passage aux parametre de ft_select
+** et stockage des anciens params dans save. mode 1 = passage au parametres
+** standards.
+*/
 t_termios	*handle_term(char c)
 {
 	t_termios			term;
@@ -27,35 +31,34 @@ t_termios	*handle_term(char c)
 	else
 		return (save);
 }
-
-char	**return_select(t_meta *meta)
+/*
+** Imprime seulement les elements selectionnes de la 
+** liste sur la sortie standard.
+*/
+void	return_select(t_meta *meta)
 {
 	t_list		*tmp;
-	t_ushort	size;
-	char		**tab;
 
 	tmp = BEGIN;
-	size = 0;
 	while (tmp)
 	{
 		if (tmp->content_size & 1)
-			size++;
+		{
+			ft_putstr(tmp->content);
+			ft_putchar(' ');
+		}
 		tmp = tmp->next;
 	}
-	tab = (char**)malloc(sizeof(char*) * size  + 1);
-	tab[size] = NULL;
-	tmp = BEGIN;
-	size = 0;
-	while (tmp)
-	{
-		if (tmp->content_size & 1)
-			tab[size++] = ft_strdup(tmp->content);
-		tmp = tmp->next;
-	}
-	return (tab);
+	ft_lstdel(&BEGIN, &ft_freelst);
+	free(COL_PAD);
 }
-
-void	read_keys(t_meta *meta)
+/*
+** Lit les keys et renvoie aux fonctions concernees.
+** 1. pour toutes les fleches ft_move>
+** 2. pour echap ou entree, sortie de boucle avec return 0 si echap.
+** 3. pour espace et supprimer ft_current.
+*/
+int		read_keys(t_meta *meta)
 {
 	int		i;
 	char	buf[4];
@@ -69,11 +72,14 @@ void	read_keys(t_meta *meta)
 				ft_move(meta, buf);
 		if (buf[0] == 32 && !buf[1])
 			ft_current(meta, 2);
-		if (buf[0] == 27 && !buf[1])
+		if (buf[0] == 10 && !buf[1])
 			i = 2;
+		if (buf[0] == 27 && !buf[1])
+			i = 0;
 		if (buf[0] == 127 && !buf[1])
 			ft_current(meta, 3);
 	}
+	return (i);
 }
 
 void	debug(t_meta *meta)
@@ -93,28 +99,22 @@ void	debug(t_meta *meta)
 	while (++i < COL_NB)
 		dprintf(1, "col_pad[%d] = %d\n", i, COL_PAD[i]);
 }
-
-
-void	print_elems(t_list *elem)
-{
-	//ft_putendl(elem->content);
-	dprintf(1, "%s\n", elem->content);
-}
-
-void			exit_select(t_meta *meta)
+/*
+** Gere la sortie de programme. 
+** 1. Initialise le terminal. 
+** 2. Efface l'ecran.
+** 3. replace le curseur au point de sauvegarde avt prog.
+*/
+void		exit_select(t_meta *meta, int i)
 {
 	handle_term(1);
 	tputs(tgetstr("cl", NULL), 1, &fputchar);
 	init_curseur(meta, 1);
-}
-
-t_meta			*get_meta(t_meta *meta)
-{
-	static	t_meta *save = NULL;
-
-	if (meta)
-		save = meta;
-	return (save);
+	if (!i)
+	{
+		ft_lstdel(&BEGIN, &ft_freelst);
+		free(COL_PAD);
+	}
 }
 
 int				main (int ac, char **av)
@@ -123,7 +123,7 @@ int				main (int ac, char **av)
 	t_meta	meta;
 	char	**tab;
 
-	i =  -1;
+	get_fd(open_fd());
 	set_signals();
 	init_list(&meta, av);
 	init_term(&meta);
@@ -134,14 +134,9 @@ int				main (int ac, char **av)
 	print(&meta, meta.begin, 0);
 	handle_term(0);
 	ft_current(&meta, 0);
-	read_keys(&meta);
-	exit_select(&meta);
-	tab = return_select(&meta);
-	while (*tab)
-	{
-		ft_putstr(*tab);
-		tab++;
-	}
-//	debug(&meta);
+	i = read_keys(&meta);
+	exit_select(&meta, i);
+	if (i)
+		return_select(&meta);
 	return (0);
 }

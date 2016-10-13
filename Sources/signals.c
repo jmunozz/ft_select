@@ -1,6 +1,40 @@
 #include "../Includes/ft_select.h"
 
-void	sigtstp(t_meta *meta, int sig)
+/*
+** Fonction d'impression speciale utilisee a la reprise d'un SIGCONT.
+*/
+static void		print_cont(t_meta *meta, t_list *begin, char mode)
+{
+	t_ushort	col_tmp;
+	t_list		*first_elem;
+	t_list		*tmp;
+
+	save_pos(meta, 0);
+	col_tmp = CUR_COL;
+	CUR_COL = getstart(meta, CUR_COL);
+	first_elem = get_elem(meta, 1);
+	init_screen(meta);
+	while (first_elem && POS_L + COL_PAD[CUR_COL] < L)
+	{
+		tputs(tgoto(tgetstr("cm", NULL), POS_L, POS_H), 1, &fputchar);
+		clear_line(meta, mode);
+		print_elem(meta, first_elem, 1);
+		if (++POS_H == H)
+		{
+			POS_H = 0;
+			POS_L += COL_PAD[CUR_COL++] + SPACING;
+		}
+		first_elem = first_elem->next;
+	}
+	clear_line(meta, mode);
+	COL_PR = (tmp) ? CUR_COL : 666;
+	save_pos(meta, 1);
+	CUR_COL = col_tmp;
+}
+/*
+** Gere les signaux SGITSTP et SIGCONT.
+*/
+void		sigtstp(t_meta *meta, int sig)
 {
 	t_termios	*save;
 	char		c[2];
@@ -12,7 +46,7 @@ void	sigtstp(t_meta *meta, int sig)
 		c[1] = 0;
 		signal(SIGTSTP, SIG_DFL);
 		ioctl(0, TIOCSTI, c);
-		exit_select(meta);
+		exit_select(meta, 1);
 
 	}
 	else
@@ -25,8 +59,10 @@ void	sigtstp(t_meta *meta, int sig)
 		signal(SIGTSTP, &handle_sig);
 	}
 }
-
-void	handle_sig(int sig)
+/*
+** Gere une sortie de programme correcte en cas de signaux.
+*/
+void		handle_sig(int sig)
 {
 	t_meta		*meta;
 	t_winsize	win;
@@ -34,7 +70,7 @@ void	handle_sig(int sig)
 	meta = get_meta(NULL);
 	if (sig == SIGINT || sig ==  SIGQUIT || sig == SIGTERM)
 	{
-		exit_select(meta);
+		exit_select(meta, 0);
 		exit (-1);
 	}
 	if (sig == SIGWINCH)
@@ -50,8 +86,10 @@ void	handle_sig(int sig)
 	if (sig == SIGTSTP || sig == SIGCONT)
 		sigtstp(meta, sig);
 }
-
-void	set_signals()
+/*
+** Renvoie a la fonction handle_sig en cas d'interception de signal.
+*/
+void		set_signals()
 {
 	signal(SIGINT, &handle_sig);
 	signal(SIGQUIT, &handle_sig);

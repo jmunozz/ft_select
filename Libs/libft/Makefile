@@ -6,7 +6,7 @@
 #    By: jmunoz <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/03/06 15:04:00 by jmunoz            #+#    #+#              #
-#    Updated: 2016/05/12 11:05:46 by jmunoz           ###   ########.fr        #
+#    Updated: 2016/10/13 19:49:17 by jmunoz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -91,7 +91,8 @@ SRC=	ft_memset.c \
 	 ft_tabdup.c\
 	 ft_strsplit2.c\
 	 ft_lstaddback.c\
-	 ft_lstcpy.c
+	 ft_lstcpy.c\
+	 ft_freelst.c
 
 OBJ=$(SRC:.c=.o)
 NAME=libft.a

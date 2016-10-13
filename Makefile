@@ -6,7 +6,7 @@
 #    By: jmunoz <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/05/03 14:58:59 by jmunoz            #+#    #+#              #
-#    Updated: 2016/06/29 18:30:08 by jmunoz           ###   ########.fr        #
+#    Updated: 2016/10/13 17:35:23 by jmunoz           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ SRC= Sources/main.c\
 	 Sources/errors.c\
 	 Sources/init.c\
 	 Sources/elems.c\
-	 Sources/print.c
+	 Sources/print.c\
+	 Sources/support.c
 LIBS= Libs/
 OBJ= $(SRC:.c=.o)
 NAME= ft_select

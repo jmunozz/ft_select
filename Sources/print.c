@@ -1,10 +1,5 @@
 #include "../Includes/ft_select.h"
 
-int				fputchar(int c)
-{
-	write(1, &c, 1);
-	return (c);
-}
 /*
 ** Place le curseur en 0,0.
 ** Efface tout l'écran.
@@ -16,7 +11,9 @@ void			init_screen(t_meta *meta)
 	tputs(tgoto(tgetstr("cm", NULL), POS_L, POS_H), 1, &fputchar);
 	init_pos(meta, "hl");
 }
-
+/*
+** Sauvegarde la position de l'element.
+*/
 void			save_pos(t_meta *meta, char mode)
 {
 	static t_ushort pos_h;
@@ -52,8 +49,10 @@ void			clear_line(t_meta *meta, char mode)
 */
 void			print_elem(t_meta *meta, t_list *elem, char mode)
 {
-	char *print;
+	char	*print;
+	int		fd;
 
+	fd = get_fd(0);
 	tputs(tgoto(tgetstr("cm", NULL), POS_L, POS_H), 1, &fputchar);
 	if (elem->content_size & 1)
 		tputs(tgetstr("mr", NULL), 1, &fputchar);
@@ -61,7 +60,8 @@ void			print_elem(t_meta *meta, t_list *elem, char mode)
 		tputs(tgetstr("us", NULL), 1, &fputchar);
 	if (mode == 1)
 		tputs(tgetstr("ue", NULL), 1, &fputchar);
-	ft_putstr((print = ft_padding_left(elem->content, ' ', COL_PAD[CUR_COL])));
+	ft_putstr_fd((print = ft_padding_left(elem->content, ' ',
+	COL_PAD[CUR_COL])), fd);
 	free(print);
 	if (elem->content_size & 1)
 		tputs(tgetstr("me", NULL), 1, &fputchar);
@@ -98,33 +98,3 @@ void			print(t_meta *meta, t_list *begin, char mode)
 	COL_PR = (tmp) ? CUR_COL : 666;
 	save_pos(meta, 1);
 }
-
-void		print_cont(t_meta *meta, t_list *begin, char mode)
-{
-	t_ushort	col_tmp;
-	t_list		*first_elem;
-	t_list		*tmp;
-
-	save_pos(meta, 0);
-	col_tmp = CUR_COL;
-	CUR_COL = getstart(meta, CUR_COL);
-	first_elem = get_elem(meta, 1);
-	init_screen(meta);
-	while (first_elem && POS_L + COL_PAD[CUR_COL] < L)
-	{
-		tputs(tgoto(tgetstr("cm", NULL), POS_L, POS_H), 1, &fputchar);
-		clear_line(meta, mode);
-		print_elem(meta, first_elem, 1);
-		if (++POS_H == H)
-		{
-			POS_H = 0;
-			POS_L += COL_PAD[CUR_COL++] + SPACING;
-		}
-		first_elem = first_elem->next;
-	}
-	clear_line(meta, mode);
-	COL_PR = (tmp) ? CUR_COL : 666;
-	save_pos(meta, 1);
-	CUR_COL = col_tmp;
-}
-

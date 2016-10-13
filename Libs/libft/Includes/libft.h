@@ -6,7 +6,7 @@
 /*   By: jmunoz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 08:21:22 by jmunoz            #+#    #+#             */
-/*   Updated: 2016/05/12 11:06:27 by jmunoz           ###   ########.fr       */
+/*   Updated: 2016/10/13 19:49:27 by jmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,6 @@ char				**ft_tabdup(char **tab);
 char				**ft_strsplit2(char const *s, char c, char d);
 void				ft_lstaddback(t_list **alst, t_list *new);
 t_list				*ft_lstcpy(void	*content, size_t content_size);
+void				ft_freelst(void *content, size_t content_size);
 
 #endif

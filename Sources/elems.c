@@ -79,6 +79,7 @@ t_list	*delete_elem(t_meta *meta, t_list *elem)
 	elem = tmp;
 	if (!--LST_SIZE)
 		ft_errors();
+	free(COL_PAD);
 	init_pad(meta);
 	print(meta, get_elem(meta, 1), 1);
 	if (!POS_H && !elem)

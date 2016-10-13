@@ -21,7 +21,7 @@
 # define H meta->h
 # define L meta->l
 # define LST_SIZE meta->lst_size
-# define BEGIN meta->begin
+# define BEGIN (meta->begin)
 # define COL_PR meta->col_pr
 # define ELEM meta->elem
 
@@ -58,15 +58,15 @@ t_ushort			get_pos_l(t_meta *meta, t_ushort cur_col, t_ushort col_start);
 /*
 **main.c
 */
+int					get_fd(int fd);
 void				debug(t_meta *meta);
-void				exit_select(t_meta *meta);
-void				read_keys(t_meta *meta);
+void				exit_select(t_meta *meta, int i);
+int					read_keys(t_meta *meta);
 t_meta				*get_meta(t_meta *meta);
 t_termios			*handle_term(char c);
 /*
 **print.c
 */
-void				print_cont(t_meta *meta, t_list *begin, char mode);
 void				clear_line(t_meta *meta, char mode);
 void				init_screen(t_meta *meta);
 void				save_pos(t_meta *meta, char mode);
@@ -95,4 +95,8 @@ int					init_term(t_meta *meta);
 void				ft_current(t_meta *meta, char mode);
 t_list				*get_elem(t_meta *meta, char mode);
 t_list				*delete_elem(t_meta *meta, t_list *elem);
+/*
+** support.c
+*/
+int					open_fd(void);
 #endif
