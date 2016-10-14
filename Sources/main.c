@@ -117,12 +117,14 @@ void		exit_select(t_meta *meta, int i)
 	}
 }
 
-int				main (int ac, char **av)
+int				main (int ac, char **av, char **envp)
 {
 	int		i;
 	t_meta	meta;
 	char	**tab;
 
+	if (!av[1] || !envp || !*envp)
+		return (0);
 	get_fd(open_fd());
 	set_signals();
 	init_list(&meta, av);
