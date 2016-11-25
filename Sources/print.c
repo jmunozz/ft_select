@@ -60,11 +60,13 @@ void			print_elem(t_meta *meta, t_list *elem, char mode)
 		tputs(tgetstr("us", NULL), 1, &fputchar);
 	if (mode == 1)
 		tputs(tgetstr("ue", NULL), 1, &fputchar);
+	ft_set_color(elem->content_size);
 	ft_putstr_fd((print = ft_padding_left(elem->content, ' ',
 	COL_PAD[CUR_COL])), fd);
 	free(print);
 	if (elem->content_size & 1)
 		tputs(tgetstr("me", NULL), 1, &fputchar);
+	ft_set_color(0);
 }
 /*
 **Imprime autant de colonnes que peut en contenir une page à partir de l'élement

@@ -6,6 +6,7 @@
 # include <curses.h>
 # include <stdio.h>
 # include <sys/ioctl.h>
+# include <sys/stat.h>
 # include "../Libs/libft/Includes/libft.h"
 
 # define SPACING 5
@@ -24,6 +25,14 @@
 # define BEGIN (meta->begin)
 # define COL_PR meta->col_pr
 # define ELEM meta->elem
+
+#define ANSI_COLOR_RED     "\x1b[31m"
+#define ANSI_COLOR_GREEN   "\x1b[32m"
+#define ANSI_COLOR_YELLOW  "\x1b[33m"
+#define ANSI_COLOR_BLUE    "\x1b[34m"
+#define ANSI_COLOR_MAGENTA "\x1b[35m"
+#define ANSI_COLOR_CYAN    "\x1b[36m"
+#define ANSI_COLOR_RESET   "\x1b[0m"
 
 typedef	unsigned short t_ushort;
 typedef struct termios t_termios;
@@ -99,4 +108,5 @@ t_list				*delete_elem(t_meta *meta, t_list *elem);
 ** support.c
 */
 int					open_fd(void);
+void				ft_set_color(size_t content_size);
 #endif

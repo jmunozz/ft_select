@@ -79,16 +79,19 @@ int				init_pad(t_meta *meta)
 */
 void			init_list(t_meta *meta, char **av)
 {
-	int		i;
-	size_t	data;
+	int			i;
+	size_t		data;
+	struct stat	buf;
+	size_t			content_size;
 
 	i = 0;
 	while (av[++i])
 	{
+		content_size = (lstat(av[i], &buf) >= 0) ? buf.st_mode & ~1 : 0;
 		if (!meta->begin)
-			meta->begin = ft_lstcpy(av[i], 0);
+			meta->begin = ft_lstcpy(av[i], content_size);
 		else
-			ft_lstaddback(&(meta->begin), ft_lstcpy(av[i], 0));
+			ft_lstaddback(&(meta->begin), ft_lstcpy(av[i], content_size));
 	}
 	meta->lst_size = i - 1;
 }
